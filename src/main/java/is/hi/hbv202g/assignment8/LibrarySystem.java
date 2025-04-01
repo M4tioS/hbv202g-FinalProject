@@ -9,11 +9,13 @@ public class LibrarySystem {
     private List<Book> books;
     private List<User> users;
     private List<Lending> lendings;
+    private List<Omnibus> omnibuses;
 
     public LibrarySystem() {
         this.books = new ArrayList<>();
         this.users = new ArrayList<>();
         this.lendings = new ArrayList<>();
+        this.omnibuses = new ArrayList<>();
     }
 
     public void addBookWithTitleAndNameOfSingleAuthor(String title, String authorName){
@@ -66,6 +68,8 @@ public class LibrarySystem {
         lendings.add(lending);
     }
 
+
+
     public void extendLending(FacultyMember facultyMember, Book book, LocalDate newDueDate) throws UserOrBookDoesNotExistException {
         boolean found = false;
         for (Lending lending : lendings) {
@@ -82,19 +86,63 @@ public class LibrarySystem {
     }
 
     public void returnBook(User user, Book book) throws UserOrBookDoesNotExistException {
-       
+
         boolean found = false;
-        
+
         for (Lending lending : lendings) {
             if (lending.getBook().equals(book) && lending.getUser().equals(user)) {
                 lendings.remove(lending);
                 found = true;
                 return;
             }
-        } 
-        
+        }
+
         if (!found) {
             throw new UserOrBookDoesNotExistException("Book was not borrowed");
         }
     }
+
+    public void addOmnibus(List<Book> books) {
+        Omnibus omnibus = new Omnibus(books);
+        omnibuses.add(omnibus);
+    }
+
+    public void borrowOmnibus(User user, Omnibus omnibus) throws UserOrBookDoesNotExistException {
+        if (!omnibuses.contains(omnibus)) {
+            throw new UserOrBookDoesNotExistException("Omnibus does not exist");
+        }
+
+        if (!users.contains(user)){
+            throw new UserOrBookDoesNotExistException("User does not exist");
+        }
+        for (Book book : omnibus.getBooks()) {
+            Lending lending = new Lending(book, user);
+            lendings.add(lending);
+        }
+    }
+
+
+    public void returnOmnibus(User user, Omnibus omnibus) throws UserOrBookDoesNotExistException {
+        if (!omnibuses.contains(omnibus)) {
+            throw new UserOrBookDoesNotExistException("Omnibus does not exist");
+        }
+        if (!users.contains(user)){
+            throw new UserOrBookDoesNotExistException("User does not exist");
+        }
+        for (Book book : omnibus.getBooks()) {
+            Lending lending = new Lending(book, user);
+            lendings.remove(lending);
+        }
+    }
+
+    public void extendOmnibus(FacultyMember facultyMember, Omnibus omnibus, LocalDate newDueDate) throws UserOrBookDoesNotExistException {
+        if (!omnibuses.contains(omnibus)) {
+            throw new UserOrBookDoesNotExistException("Omnibus does not exist");
+        }
+        for (Book book : omnibus.getBooks()) {
+            Lending lending = new Lending(book, facultyMember);
+            lending.setDueDate(newDueDate);
+        }
+    }
+
 }

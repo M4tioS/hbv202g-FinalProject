@@ -13,6 +13,8 @@ public class Lending {
 
     }
 
+
+
     public LocalDate getDueDate() {
         return dueDate;
     }
