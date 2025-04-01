@@ -4,7 +4,8 @@ import java.util.List;
 
 public class Omnibus {
     private List<Book> books;
-
+    private List<User> users;
+    private List<Lending> lendings;
 
     public Omnibus(List<Book> books) {
         this.books = books;
@@ -35,6 +36,16 @@ public class Omnibus {
         throw new UserOrBookDoesNotExistException("Book with title " + title + " does not exist");
     }
 
+    public void borrowBook(User user, Book book) throws UserOrBookDoesNotExistException {
+        if (!books.contains(book)) {
+            throw new UserOrBookDoesNotExistException("Book does not exist");
+        }
 
+        if (!users.contains(user)) {
+            throw new UserOrBookDoesNotExistException("User does not exist");
+        }
+        Lending lending = new Lending(book, user);
+        lendings.add(lending);
+    }
 
 }
