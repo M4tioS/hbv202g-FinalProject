@@ -4,40 +4,123 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The main library system class that manages books, users, lendings and omnibuses.
+ * This class implements the Subject part of the Observer pattern.
+ */
 public class LibrarySystem {
 
     private List<Book> books;
     private List<User> users;
     private List<Lending> lendings;
     private List<Omnibus> omnibuses;
+    private List<LibraryObserver> observers;
 
+    /**
+     * Creates a new library system with empty lists.
+     */
     public LibrarySystem() {
         this.books = new ArrayList<>();
         this.users = new ArrayList<>();
         this.lendings = new ArrayList<>();
         this.omnibuses = new ArrayList<>();
+        this.observers = new ArrayList<>();
     }
 
+    /**
+     * Adds an observer to be notified of library events.
+     * 
+     * @param observer The observer to add
+     */
+    public void addObserver(LibraryObserver observer) {
+        observers.add(observer);
+    }
+
+    /**
+     * Removes an observer from the notification list.
+     * 
+     * @param observer The observer to remove
+     */
+    public void removeObserver(LibraryObserver observer) {
+        observers.remove(observer);
+    }
+
+    /**
+     * Notifies all observers about a book being borrowed.
+     * 
+     * @param book The book that was borrowed
+     * @param user The user who borrowed the book
+     */
+    private void notifyBookBorrowed(Book book, User user) {
+        for (LibraryObserver observer : observers) {
+            observer.bookBorrowed(book, user);
+        }
+    }
+
+    /**
+     * Notifies all observers about a book being returned.
+     * 
+     * @param book The book that was returned
+     * @param user The user who returned the book
+     */
+    private void notifyBookReturned(Book book, User user) {
+        for (LibraryObserver observer : observers) {
+            observer.bookReturned(book, user);
+        }
+    }
+
+    /**
+     * Adds a book with a single author to the library.
+     * 
+     * @param title The title of the book
+     * @param authorName The name of the author
+     */
     public void addBookWithTitleAndNameOfSingleAuthor(String title, String authorName){
         Book book = new Book(title, authorName);
         books.add(book);
     }
 
+    /**
+     * Adds a book with multiple authors to the library.
+     * 
+     * @param title The title of the book
+     * @param authors The list of authors
+     * @throws EmptyAuthorListException if the author list is empty
+     */
     public void addBookWithTitleAndAuthorList(String title, List<Author> authors) throws EmptyAuthorListException {
         Book book = new Book(title, authors);
         books.add(book);
     }
 
+    /**
+     * Adds a student user to the library.
+     * 
+     * @param name The name of the student
+     * @param feePaid Whether the student has paid the fee
+     */
     public void addStudentUser(String name, boolean feePaid) {
         User user = new Student(name, feePaid);
         users.add(user);
     }
 
+    /**
+     * Adds a faculty member to the library.
+     * 
+     * @param name The name of the faculty member
+     * @param department The department of the faculty member
+     */
     public void addFacultyMemberUser(String name, String department) {
         User user = new FacultyMember(name, department);
         users.add(user);
     }
 
+    /**
+     * Finds a book by its title.
+     * 
+     * @param title The title to search for
+     * @return The found book
+     * @throws UserOrBookDoesNotExistException if no book with the title exists
+     */
     public Book findBookByTitle(String title) throws UserOrBookDoesNotExistException {
         for(Book book : books) {
             if(book.getTitle().equals(title)) {
@@ -47,6 +130,13 @@ public class LibrarySystem {
         throw new UserOrBookDoesNotExistException("Book with title " + title + " does not exist");
     }
 
+    /**
+     * Finds a user by name.
+     * 
+     * @param name The name to search for
+     * @return The found user
+     * @throws UserOrBookDoesNotExistException if no user with the name exists
+     */
     public User findUserByName(String name) throws UserOrBookDoesNotExistException {
         for (User user : users) {
             if (user.getName().equals(name)) {
@@ -56,6 +146,13 @@ public class LibrarySystem {
         throw new UserOrBookDoesNotExistException("User with name " + name + " does not exist");
     }
 
+    /**
+     * Allows a user to borrow a book.
+     * 
+     * @param user The user borrowing the book
+     * @param book The book to borrow
+     * @throws UserOrBookDoesNotExistException if the user or book doesn't exist
+     */
     public void borrowBook(User user, Book book) throws UserOrBookDoesNotExistException {
         if (!books.contains(book)) {
             throw new UserOrBookDoesNotExistException("Book does not exist");
@@ -66,10 +163,19 @@ public class LibrarySystem {
         }
         Lending lending = new Lending(book, user);
         lendings.add(lending);
+        
+        // Notify observers
+        notifyBookBorrowed(book, user);
     }
 
-
-
+    /**
+     * Extends the lending period for a faculty member.
+     * 
+     * @param facultyMember The faculty member
+     * @param book The book to extend
+     * @param newDueDate The new due date
+     * @throws UserOrBookDoesNotExistException if the lending doesn't exist
+     */
     public void extendLending(FacultyMember facultyMember, Book book, LocalDate newDueDate) throws UserOrBookDoesNotExistException {
         boolean found = false;
         for (Lending lending : lendings) {
@@ -85,14 +191,23 @@ public class LibrarySystem {
         }
     }
 
+    /**
+     * Returns a borrowed book.
+     * 
+     * @param user The user returning the book
+     * @param book The book being returned
+     * @throws UserOrBookDoesNotExistException if the lending doesn't exist
+     */
     public void returnBook(User user, Book book) throws UserOrBookDoesNotExistException {
-
         boolean found = false;
 
         for (Lending lending : lendings) {
             if (lending.getBook().equals(book) && lending.getUser().equals(user)) {
                 lendings.remove(lending);
                 found = true;
+                
+                // Notify observers
+                notifyBookReturned(book, user);
                 return;
             }
         }
@@ -102,11 +217,23 @@ public class LibrarySystem {
         }
     }
 
+    /**
+     * Adds an omnibus (collection of books) to the library.
+     * 
+     * @param books The list of books in the omnibus
+     */
     public void addOmnibus(List<Book> books) {
         Omnibus omnibus = new Omnibus(books);
         omnibuses.add(omnibus);
     }
 
+    /**
+     * Allows a user to borrow an omnibus.
+     * 
+     * @param user The user borrowing the omnibus
+     * @param omnibus The omnibus to borrow
+     * @throws UserOrBookDoesNotExistException if the user or omnibus doesn't exist
+     */
     public void borrowOmnibus(User user, Omnibus omnibus) throws UserOrBookDoesNotExistException {
         if (!omnibuses.contains(omnibus)) {
             throw new UserOrBookDoesNotExistException("Omnibus does not exist");
@@ -118,10 +245,19 @@ public class LibrarySystem {
         for (Book book : omnibus.getBooks()) {
             Lending lending = new Lending(book, user);
             lendings.add(lending);
+            
+            // Notify observers
+            notifyBookBorrowed(book, user);
         }
     }
 
-
+    /**
+     * Returns an omnibus.
+     * 
+     * @param user The user returning the omnibus
+     * @param omnibus The omnibus being returned
+     * @throws UserOrBookDoesNotExistException if the user or omnibus doesn't exist
+     */
     public void returnOmnibus(User user, Omnibus omnibus) throws UserOrBookDoesNotExistException {
         if (!omnibuses.contains(omnibus)) {
             throw new UserOrBookDoesNotExistException("Omnibus does not exist");
@@ -129,20 +265,66 @@ public class LibrarySystem {
         if (!users.contains(user)){
             throw new UserOrBookDoesNotExistException("User does not exist");
         }
+        
         for (Book book : omnibus.getBooks()) {
-            Lending lending = new Lending(book, user);
-            lendings.remove(lending);
+            returnBook(user, book);
         }
     }
 
+    /**
+     * Extends the lending period for an omnibus.
+     * 
+     * @param facultyMember The faculty member
+     * @param omnibus The omnibus to extend
+     * @param newDueDate The new due date
+     * @throws UserOrBookDoesNotExistException if the faculty member or omnibus doesn't exist
+     */
     public void extendOmnibus(FacultyMember facultyMember, Omnibus omnibus, LocalDate newDueDate) throws UserOrBookDoesNotExistException {
         if (!omnibuses.contains(omnibus)) {
             throw new UserOrBookDoesNotExistException("Omnibus does not exist");
         }
+        if (!users.contains(facultyMember)) {
+            throw new UserOrBookDoesNotExistException("Faculty member does not exist");
+        }
+        
         for (Book book : omnibus.getBooks()) {
-            Lending lending = new Lending(book, facultyMember);
-            lending.setDueDate(newDueDate);
+            extendLending(facultyMember, book, newDueDate);
         }
     }
 
+    /**
+     * Gets the list of all books in the library.
+     * 
+     * @return The list of books
+     */
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    /**
+     * Gets the list of all users registered in the library.
+     * 
+     * @return The list of users
+     */
+    public List<User> getUsers() {
+        return users;
+    }
+
+    /**
+     * Gets the list of all current lendings.
+     * 
+     * @return The list of lendings
+     */
+    public List<Lending> getLendings() {
+        return lendings;
+    }
+
+    /**
+     * Gets the list of all omnibuses in the library.
+     * 
+     * @return The list of omnibuses
+     */
+    public List<Omnibus> getOmnibuses() {
+        return omnibuses;
+    }
 }
