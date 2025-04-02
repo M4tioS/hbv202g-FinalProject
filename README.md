@@ -31,7 +31,7 @@ The UML class diagram is available in [UML/library_system.uxf](UML/library_syste
 ### Prerequisites
 
 - Java 17 or higher
-- Maven 3.6 or higher
+- Maven 3.9.9
 
 ### Building the Project
 
