@@ -10,6 +10,8 @@ import java.util.List;
 
 /**
  * Unit tests for the LibrarySystem class.
+ * This test suite verifies the functionality of the library management system
+ * including book and user management, lending operations, and the observer pattern.
  */
 public class LibrarySystemTest {
     
@@ -256,7 +258,9 @@ public class LibrarySystemTest {
     }
     
     /**
-     * Tests that an exception is thrown when borrowing a non-existent book.
+     * Tests the behavior when attempting to borrow a book that doesn't exist.
+     * 
+     * @throws UserOrBookDoesNotExistException This exception is expected to be thrown
      */
     @Test(expected = UserOrBookDoesNotExistException.class)
     public void testBorrowNonExistentBook() throws UserOrBookDoesNotExistException {
@@ -265,7 +269,9 @@ public class LibrarySystemTest {
     }
     
     /**
-     * Tests that an exception is thrown when a non-existent user tries to borrow a book.
+     * Tests the behavior when a non-existent user attempts to borrow a book.
+     * 
+     * @throws UserOrBookDoesNotExistException This exception is expected to be thrown
      */
     @Test(expected = UserOrBookDoesNotExistException.class)
     public void testNonExistentUserBorrowBook() throws UserOrBookDoesNotExistException {
@@ -274,7 +280,9 @@ public class LibrarySystemTest {
     }
     
     /**
-     * Tests that an exception is thrown when adding a book with an empty author list.
+     * Tests the validation when attempting to create a book with an empty author list.
+     * 
+     * @throws EmptyAuthorListException This exception is expected to be thrown
      */
     @Test(expected = EmptyAuthorListException.class)
     public void testAddBookWithEmptyAuthorList() throws EmptyAuthorListException {
