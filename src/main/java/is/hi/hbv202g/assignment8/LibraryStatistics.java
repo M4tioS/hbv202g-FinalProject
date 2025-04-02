@@ -72,9 +72,17 @@ public class LibraryStatistics implements LibraryObserver {
         int maxCount = 0;
         
         for (Map.Entry<User, Integer> entry : userBorrowCounts.entrySet()) {
-            if (entry.getValue() > maxCount) {
-                maxCount = entry.getValue();
-                mostActive = entry.getKey();
+            User user = entry.getKey();
+            int count = entry.getValue();
+            
+            // If this user has more borrowings, they become the most active
+            if (count > maxCount) {
+                maxCount = count;
+                mostActive = user;
+            } 
+            // In case of a tie, prefer FacultyMember over other user types
+            else if (count == maxCount && user instanceof FacultyMember && !(mostActive instanceof FacultyMember)) {
+                mostActive = user;
             }
         }
         
