@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Library Management System">
+  <bannerLeft>
+    <name>Library Management System</name>
+  </bannerLeft>
+  <publishDate position="right"/>
+  <version position="right"/>
+  <body>
+    <menu name="Overview">
+      <item name="Introduction" href="index.html"/>
+      <item name="License" href="license.html"/>
+      <item name="Team" href="team.html"/>
+    </menu>
+    <menu name="Documentation">
+      <item name="Design Documentation" href="design.html"/>
+      <item name="Javadoc" href="apidocs/index.html"/>
+    </menu>
+    <menu ref="reports" />
+  </body>
+</project> 
