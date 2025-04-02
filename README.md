@@ -43,8 +43,8 @@ mvn clean package
 
 Or run the provided build script:
 
-```bash
-./build.sh
+```
+build.bat
 ```
 
 ### Running the Application
@@ -57,8 +57,8 @@ java -jar target/LibrarySystem-1.0-SNAPSHOT-jar-with-dependencies.jar
 
 Or use the provided run script:
 
-```bash
-./run.sh
+```
+run.bat
 ```
 
 ### Testing the Application
