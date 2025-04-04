@@ -1,0 +1,173 @@
+// src/main/java/is/hi/hbv202g/assignment8/Menu.java
+
+package is.hi.hbv202g.assignment8;
+
+import java.util.List;
+import java.util.Scanner;
+
+
+/**
+ * The main menu class for the library management system.
+ * Handles user input and displays the menu options.
+ */
+public class Menu {
+    private LibrarySystem library;
+    private Scanner scanner;
+    private LibraryStatistics stats;
+
+    /**
+     * Constructor for the Menu class.
+     *
+     * @param library The library system instance.
+     */
+    public Menu(LibrarySystem library) {
+        this.library = library;
+        this.scanner = new Scanner(System.in);
+        stats = new LibraryStatistics();
+        library.addObserver(stats);
+    }
+
+
+    /**
+     * Runs the main menu loop.
+     */
+    public void run() {
+        while (true) {
+            System.out.println("Library Management System");
+            System.out.println("1. Borrow a book");
+            System.out.println("2. Return a book");
+            System.out.println("3. List all books");
+            System.out.println("4. List all users");
+            System.out.println("5. Print statistics");
+            System.out.println("6. Create user");
+            System.out.println("7. Exit");
+
+            System.out.print("Choose an option: ");
+            String input = scanner.nextLine();
+
+
+            try {
+                int option = Integer.parseInt(input);
+
+                switch (option) {
+                    case 1:
+                        borrowBook();
+                        break;
+                    case 2:
+                        returnBook();
+                        break;
+                    case 3:
+                        listAllBooks();
+                        break;
+                    case 4:
+                        listAllUsers();
+                        break;
+                    case 5:
+                        System.out.println("Total borrowings: " + stats.getTotalBorrowings());
+                        System.out.println("Total returns: " + stats.getTotalReturns());
+                        break;
+                    case 6:
+                        createUser();
+                        break;
+                    case 7:
+                        System.out.println("Goodbye!");
+                        return;
+                    default:
+                        System.out.println("Invalid option. Please choose again.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
+            }
+        }
+    }
+
+
+    /**
+     * Allows a user to borrow a book.
+     */
+    private void borrowBook() {
+        System.out.print("Enter your name: ");
+        String userName = scanner.nextLine();
+
+        System.out.print("Enter the book title: ");
+        String bookTitle = scanner.nextLine();
+
+        try {
+            User user = library.findUserByName(userName);
+            Book book = library.findBookByTitle(bookTitle);
+
+            if (user != null && book != null) {
+                library.borrowBook(user, book);
+                System.out.println("Book borrowed successfully!");
+            } else {
+                System.out.println("User or book not found.");
+            }
+        } catch (Exception e) {
+            System.out.println("Error borrowing book: " + e.getMessage());
+        }
+
+    }
+
+
+    /**
+     * Allows a user to return a book.
+     */
+    private void returnBook() {
+        System.out.print("Enter your name: ");
+        String userName = scanner.nextLine();
+
+        System.out.print("Enter the book title: ");
+        String bookTitle = scanner.nextLine();
+
+        try {
+            User user = library.findUserByName(userName);
+            Book book = library.findBookByTitle(bookTitle);
+
+            if (user != null && book != null) {
+                library.returnBook(user, book);
+                System.out.println("Book returned successfully!");
+            } else {
+                System.out.println("User or book not found.");
+            }
+        } catch (Exception e) {
+            System.out.println("Error returning book: " + e.getMessage());
+        }
+    }
+
+
+    /**
+     * Lists all books in the library.
+     */
+    private void listAllBooks() {
+        List<Book> books = library.getBooks();
+        for (Book book : books) {
+            System.out.println(book.getTitle());
+        }
+    }
+
+
+    /**
+     * Lists all users in the library.
+     */
+    private void listAllUsers() {
+        List<User> users = library.getUsers();
+        for (User user : users) {
+            System.out.println(user.getName());
+        }
+    }
+
+
+
+    /**
+     * Creates a new user in the library.
+     */
+    private void createUser() {
+        System.out.print("Enter the user's name: ");
+        String name = scanner.nextLine();
+
+        library.addStudentUser(name, false);
+
+        System.out.println("User created successfully!");
+    }
+
+}

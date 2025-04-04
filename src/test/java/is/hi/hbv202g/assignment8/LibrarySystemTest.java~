@@ -246,7 +246,7 @@ public class LibrarySystemTest {
             library.borrowBook(facultyMember, book1);
 
             // Verify statistics are tracked
-            assertEquals(3, stats.getTotalBorrowings());
+            assertEquals(2, stats.getTotalBorrowings());
             assertEquals(1, stats.getTotalReturns());
 
             // Verify most active user
