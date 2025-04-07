@@ -4,11 +4,35 @@ A library management software system for the HBV202G final project. This softwar
 
 ## Features
 
-- Book management with single or multiple authors
-- User management (students and faculty members)
-- Lending operations with due dates
-- Omnibus functionality for collections of books
-- Observer pattern for tracking library statistics
+- Add and search for books and users
+- Borrow and return books
+- Extend lending periods for faculty members
+- Track lending statistics
+- Support for omnibus (collections of books)
+
+## Design Patterns
+
+This project demonstrates two key design patterns:
+
+### Observer Pattern
+
+- The `LibrarySystem` class acts as the Subject
+- The `LibraryObserver` interface defines the Observer role
+- The `LibraryStatistics` class is a concrete Observer that tracks borrowing statistics
+
+### Composite Pattern
+
+- The `Omnibus` class represents a collection of books treated as a single entity
+- When operations are performed on an Omnibus, they are delegated to each individual book
+
+## Documentation
+
+For more information, please see:
+
+- [UML Diagrams](uml-diagrams.html) - Class diagram and design pattern representation
+- [Design Documentation](design.html) - Detailed description of the system architecture and patterns
+- [API Documentation](apidocs/index.html) - Javadoc for the codebase
+- [Test Documentation](testapidocs/index.html) - Javadoc for the test code
 
 ## Getting Started
 

@@ -30,7 +30,11 @@ The library management system consists of the following main components:
 
 ## UML Class Diagram
 
-The UML class diagram for this project is located in the `/UML/library_system.uxf` file. _OLD DIAGRAM, NEEDS UPDATED_
+The UML class diagram for this project is available in multiple formats:
+
+- `/UML/library_system.uxf` - UMLet format
+- `/UML/hbv202gFinalAssignment1.drawio.png` - PNG image
+- `/UML/hbv202gFinalAssignment1.drawio (1).pdf` - PDF format
 
 ## Design Patterns
 
@@ -86,7 +90,7 @@ The application follows a simple layered architecture:
 
 1. **Data Layer**: The classes `Book`, `Author`, `User`, etc. represent the data model.
 2. **Business Logic Layer**: The `LibrarySystem` class contains the core logic.
-3. **User Interface**: _TODO_
+3. **User Interface**: A simple menu-based interface is implemented in the `Menu` class.
 
 ## Data Flow
 

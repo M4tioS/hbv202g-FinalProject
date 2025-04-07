@@ -19,6 +19,9 @@ public class Main {
         Menu menu = new Menu(library);
         try {
             // Add a library statistics observer
+            LibraryStatistics stats = new LibraryStatistics();
+            library.addObserver(stats);
+            
             // Add some books
             library.addBookWithTitleAndNameOfSingleAuthor("The Hobbit", "J.R.R. Tolkien");
             library.addBookWithTitleAndNameOfSingleAuthor("1984", "George Orwell");

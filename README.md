@@ -24,7 +24,11 @@ A library management software system for the HBV202G final project. This softwar
 
 For detailed UML diagrams and design documentation, see the [docs/Design.md](docs/Design.md) file.
 
-The UML class diagram is available in [UML/library_system.uxf](UML/library_system.uxf) _TODO: OLD DIAGRAM_
+The UML class diagram is available in multiple formats:
+
+- [UML/library_system.uxf](UML/library_system.uxf) - UMLet format
+- [UML/hbv202gFinalAssignment1.drawio.png](UML/hbv202gFinalAssignment1.drawio.png) - PNG image
+- [UML/hbv202gFinalAssignment1.drawio (1).pdf](<UML/hbv202gFinalAssignment1.drawio%20(1).pdf>) - PDF format
 
 ## Getting Started
 
